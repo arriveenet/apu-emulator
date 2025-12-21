@@ -12,7 +12,9 @@ set (HDRS
     Apu.h
     AudioEngine.h
     AudioStream.h
+    EnvelopeUnit.h
     FrameSequencer.h
+    SweepUnit.h
     PulseChannel.h
     TriangleChannel.h
 )
@@ -21,7 +23,9 @@ set (SRCS
     Apu.cpp
     AudioEngine.cpp
     AudioStream.cpp
+    EnvelopeUnit.cpp
     FrameSequencer.cpp
+    SweepUnit.cpp
     PulseChannel.cpp
     TriangleChannel.cpp
     main.cpp
