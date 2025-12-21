@@ -11,6 +11,8 @@ void APU::clock()
     m_frameSequencer.clock();
 
     // Clock Channels
+    m_pulseChannel[0].clock();
+    m_pulseChannel[1].clock();
     m_triangleChannel.clock();
 }
 
@@ -18,6 +20,8 @@ void APU::writeRegister(uint16_t address, uint8_t data)
 {
     // Pulse registers
     if (address < 0x4008) {
+        const uint8_t channel = (address - 0x4000) / 4;
+        m_pulseChannel[channel].setRegister(address & 0x3, data);
     }
     // Triangle register
     else if (address < 0x400C) {
@@ -37,11 +41,15 @@ void APU::writeStatusRegister(uint8_t data)
 
 void APU::clockFrameCounterQuarterFrame()
 {
+    m_pulseChannel[0].clockFrameCounterQuarterFrame();
+    m_pulseChannel[1].clockFrameCounterQuarterFrame();
     m_triangleChannel.clockFrameCounterQuarterFrame();
 }
 
 void APU::clockFrameCounterHalfFrame()
 {
+    m_pulseChannel[0].clockFrameCounterHalfFrame();
+    m_pulseChannel[1].clockFrameCounterHalfFrame();
     m_triangleChannel.clockFrameCounterHalfFrame();
 }
 

@@ -14,6 +14,7 @@ set (HDRS
     AudioStream.h
     EnvelopeUnit.h
     FrameSequencer.h
+    LengthCounter.h
     SweepUnit.h
     PulseChannel.h
     TriangleChannel.h
@@ -24,6 +25,7 @@ set (SRCS
     AudioEngine.cpp
     AudioStream.cpp
     EnvelopeUnit.cpp
+    LengthCounter.cpp
     FrameSequencer.cpp
     SweepUnit.cpp
     PulseChannel.cpp

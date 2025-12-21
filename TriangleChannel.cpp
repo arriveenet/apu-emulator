@@ -67,11 +67,16 @@ void TriangleChannel::setRegister(uint8_t registerNumber, uint8_t data)
     // Timer low
     else if (registerNumber == 2) {
         m_frequency = (m_frequency & 0x700) | data;
+
+        double freq = 1789773.0 / (32.0 * (m_frequency + 1));
+        std::cout << "Triangle Channel Frequency set to: " << freq << " Hz" << std::endl;
     }
     // Timer high and length counter load
     else if (registerNumber == 3) {
         m_frequency = (m_frequency & 0x00FF) | ((data & 0x07) << 8);
-        
+        double freq = 1789773.0 / (32.0 * (m_frequency + 1));
+        std::cout << "Triangle Channel Frequency set to: " << freq << " Hz" << std::endl;
+       
         m_lengthCounter = LENGTH_COUNTER_TABLE[(data & 0xF8) >> 3];
 
         m_linearReloadFlag = true;
