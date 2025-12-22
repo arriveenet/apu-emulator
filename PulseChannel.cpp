@@ -1,4 +1,17 @@
-#include "PulseChannel.h"
+﻿#include "PulseChannel.h"
+#include <iostream>
+
+static constexpr uint8_t LENGTH_COUNTER_TABLE[] = {
+    0x0A, 0xFE, 0x14, 0x02, 0x28, 0x04, 0x50, 0x06, 0xA0, 0x08, 0x3C, 0x0A, 0x0E, 0x0C, 0x1A, 0x0E,
+    0x0C, 0x10, 0x18, 0x12, 0x30, 0x14, 0x60, 0x16, 0xC0, 0x18, 0x48, 0x1A, 0x10, 0x1C, 0x20, 0x1E,
+};
+
+static constexpr uint8_t DUTY_CYCLE_TABLE[4][8] = {
+    {0, 1, 0, 0, 0, 0, 0, 0}, // 12.5%
+    {0, 1, 1, 0, 0, 0, 0, 0}, // 25%
+    {0, 1, 1, 1, 1, 0, 0, 0}, // 50%
+    {1, 0, 0, 1, 1, 1, 1, 1}  // 25% negated
+};
 
 PulseChannel::PulseChannel()
 {
@@ -6,11 +19,18 @@ PulseChannel::PulseChannel()
 
 void PulseChannel::clock()
 {
+    if (m_timerCounter == 0) {
+        m_timerCounter = m_timer;
+        m_sequenceStep = (m_sequenceStep + 1) & 0x07; // 0–7
+    }
+    else {
+        m_timerCounter--;
+    }
 }
 
 void PulseChannel::clockFrameCounterQuarterFrame()
 {
-
+    m_envelopeUnit.clock();
 }
 
 void PulseChannel::clockFrameCounterHalfFrame()
@@ -19,7 +39,10 @@ void PulseChannel::clockFrameCounterHalfFrame()
 
 uint8_t PulseChannel::getOutput()
 {
-    return 0;
+    if (m_lengthCounter == 0)
+        return 0;
+
+    return DUTY_CYCLE_TABLE[m_dutyCycle][m_sequenceStep] * m_envelopeUnit.getOutput();
 }
 
 void PulseChannel::setRegister(uint8_t registerNumber, uint8_t data)
@@ -27,28 +50,48 @@ void PulseChannel::setRegister(uint8_t registerNumber, uint8_t data)
     // Duty cycle and envelope
     if (registerNumber == 0) {
         // Volume
-        m_volume = data & 0x0F;
+        m_envelopeUnit.setDividerPeriod(data & 0x0F);
 
         // Envelope loop flag
-        m_envelopeLoopFlag = (data & 0x10) != 0;
+        //m_envelopeUnit.
+       // m_envelopeLoopFlag = (data & 0x10) != 0;
 
         // Constant volume flag
-        m_constantVolumeFlag = (data & 0x20) != 0;
+        //m_envelopeUnit.setConstantVolumeFlag((data & 0x20) != 0);
+        //m_constantVolumeFlag = (data & 0x20) != 0;
 
         // Duty cycle
         m_dutyCycle = (data & 0xC0) >> 6;
+
+        switch (m_dutyCycle) {
+        case 0: std::cout << "Pulse Channel Duty Cycle set to 12.5%" << std::endl;break;
+        case 1: std::cout << "Pulse Channel Duty Cycle set to 25%" << std::endl; break;
+        case 2: std::cout << "Pulse Channel Duty Cycle set to 50%" << std::endl; break;
+        case 3: std::cout << "Pulse Channel Duty Cycle set to 25% negated" << std::endl; break;
+        }
+        //std::cout << "Pulse Channel Volume set to: " << (int)m_volume << std::endl;
+        //std::cout << "Pulse Channel Envelope Loop Flag: " << m_envelopeLoopFlag << std::endl;
+       // std::cout << "Pulse Channel Constant Volume Flag: " << m_constantVolumeFlag << std::endl;
     }
     // Sweep unit
-    else if (registerNumber  == 2) {
+    else if (registerNumber  == 1) {
         
         
     }
     // Timer low
-    else if (registerNumber == 3) {
+    else if (registerNumber == 2) {
         m_timer = (m_timer & 0x700) | data;
     }
     // Timer high and length counter load
-    else if (registerNumber == 4) {
+    else if (registerNumber == 3) {
         m_timer = (m_timer & 0xFF) | ((data & 0x07) << 8);
+        float freq = 1789773.0f / (16 * (float)(m_timer + 1));
+        std::cout << "Pulse Channel Frequency set to: " << freq << " Hz" << std::endl;
+
+        // Start envelope
+        m_envelopeUnit.start();
+
+        // Length counter load
+        m_lengthCounter = LENGTH_COUNTER_TABLE[(data & 0xF8) >> 3];
     }
 }

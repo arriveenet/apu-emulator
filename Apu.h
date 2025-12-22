@@ -4,16 +4,8 @@
 #include "TriangleChannel.h"
 #include <stdint.h>
 
-struct APU {
-    enum StatusFlags {
-        STATUS_PULSE1_ENABLED   = 1 << 0,
-        STATUS_PULSE2_ENABLED   = 1 << 1,
-        STATUS_TRIANGLE_ENABLED = 1 << 2,
-        STATUS_NOISE_ENABLED    = 1 << 3,
-        STATUS_DMC_ENABLED      = 1 << 4,
-
-    };
-
+class APU {
+public:
     APU();
 
     // Clock the APU

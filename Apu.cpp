@@ -55,8 +55,11 @@ void APU::clockFrameCounterHalfFrame()
 
 float APU::getOutput()
 {
-    uint8_t triangle = m_triangleChannel.getOutput();
-    float out = (triangle / 15.0f) * 2.0f - 1.0f;
+    uint8_t pulseSum = m_pulseChannel[0].getOutput();
+
+    float out = (pulseSum / 8.0f);
+    //uint8_t triangle = m_triangleChannel.getOutput();
+    //float out = (triangle / 15.0f) * 2.0f - 1.0f;
     return out;
 }
 
