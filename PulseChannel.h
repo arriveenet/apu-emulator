@@ -1,5 +1,6 @@
 #pragma once
 #include "EnvelopeUnit.h"
+#include "SweepUnit.h"
 #include <stdint.h>
 
 struct PulseChannel {
@@ -22,4 +23,5 @@ private:
     uint8_t m_dutyCycle = 0;
     uint8_t m_sequenceStep = 0;
     EnvelopeUnit m_envelopeUnit;
+    SweepUnit m_sweepUnit;
 };

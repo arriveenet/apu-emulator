@@ -1,11 +1,11 @@
 #pragma once
 #include <stdint.h>
 
-struct APU;
+struct Apu;
 
 struct FrameSequencer {
 
-    explicit FrameSequencer(APU& apu);
+    explicit FrameSequencer(Apu& apu);
 
     void clock();
 
@@ -25,7 +25,7 @@ private:
     void clockQuarterFrame();
     void clockHalfFrame();
 
-    APU& m_apu;
+    Apu& m_apu;
     uint16_t m_counter = 0;
     bool m_interrup;
     bool m_disableInterrupt;

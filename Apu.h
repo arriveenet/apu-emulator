@@ -4,9 +4,9 @@
 #include "TriangleChannel.h"
 #include <stdint.h>
 
-class APU {
+class Apu {
 public:
-    APU();
+    Apu();
 
     // Clock the APU
     void clock();

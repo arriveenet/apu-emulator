@@ -3,7 +3,7 @@
 #include "TriangleChannel.h"
 
 
-FrameSequencer::FrameSequencer(APU& apu)
+FrameSequencer::FrameSequencer(Apu& apu)
     : m_apu(apu)
 {
 }

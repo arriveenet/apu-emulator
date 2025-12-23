@@ -25,7 +25,7 @@ AudioStream::~AudioStream()
     alDeleteBuffers(NUM_BUFFERS, m_buffers);
 }
 
-void AudioStream::setApu(APU* apu)
+void AudioStream::setApu(Apu* apu)
 {
     m_apu = apu;
 }

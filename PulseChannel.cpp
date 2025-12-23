@@ -20,7 +20,7 @@ PulseChannel::PulseChannel()
 void PulseChannel::clock()
 {
     if (m_timerCounter == 0) {
-        m_timerCounter = m_timer;
+        m_timerCounter = m_sweepUnit.getTargetTimer();
         m_sequenceStep = (m_sequenceStep + 1) & 0x07; // 0–7
     }
     else {
@@ -35,11 +35,16 @@ void PulseChannel::clockFrameCounterQuarterFrame()
 
 void PulseChannel::clockFrameCounterHalfFrame()
 {
+    if (m_lengthCounter > 0 && !m_envelopeUnit.isLooping()) {
+        m_lengthCounter--;
+    }
+
+    m_sweepUnit.clock();
 }
 
 uint8_t PulseChannel::getOutput()
 {
-    if (m_lengthCounter == 0)
+    if (m_lengthCounter == 0 || m_sweepUnit.isMuted())
         return 0;
 
     return DUTY_CYCLE_TABLE[m_dutyCycle][m_sequenceStep] * m_envelopeUnit.getOutput();
@@ -67,14 +72,33 @@ void PulseChannel::setRegister(uint8_t registerNumber, uint8_t data)
         case 2: std::cout << "Pulse Channel Duty Cycle set to 50%" << std::endl; break;
         case 3: std::cout << "Pulse Channel Duty Cycle set to 25% negated" << std::endl; break;
         }
-        std::cout << "Pulse Channel Volume set to: " << (int)(data & 0x0F) << std::endl;
-        std::cout << "Pulse Channel Envelope Loop Flag: " << ((data & 0x20) != 0) << std::endl;
-        std::cout << "Pulse Channel Constant Volume Flag: " << ((data & 0x10) != 0) << std::endl;
+        std::cout << "Pulse Channel Envelope - Loop: " << ((data & 0x20) != 0)
+                  << ", Constant Volume: " << ((data & 0x10) != 0)
+                  << ", Volume/Period: " << (int)(data & 0x0F) << std::endl;
     }
     // Sweep unit
     else if (registerNumber  == 1) {
-        
-        
+        // Enable sweep
+        m_sweepUnit.setEnabled((data & 0x80) != 0);
+
+        // Sweep period
+        m_sweepUnit.setDividerPeriod((data & 0x70) >> 4);
+
+        // Negate flag
+        m_sweepUnit.setNegateFlag((data & 0x08) != 0);
+
+        // Shift count
+        m_sweepUnit.setShiftCount(data & 0x07);
+
+        bool enabled = (data & 0x80) != 0;
+        uint8_t period = (data & 0x70) >> 4;
+        bool negateFlag = (data & 0x08) != 0;
+        uint8_t shiftCount = data & 0x07;
+
+        std::cout << "Pulse Channel Sweep Unit - Enabled: " << enabled
+                  << ", Period: " << (int)period
+                  << ", Negate Flag: " << negateFlag
+                  << ", Shift Count: " << (int)shiftCount << std::endl;
     }
     // Timer low
     else if (registerNumber == 2) {
@@ -83,13 +107,17 @@ void PulseChannel::setRegister(uint8_t registerNumber, uint8_t data)
     // Timer high and length counter load
     else if (registerNumber == 3) {
         m_timer = (m_timer & 0xFF) | ((data & 0x07) << 8);
-        float freq = 1789773.0f / (16 * (float)(m_timer + 1));
-        std::cout << "Pulse Channel Frequency set to: " << freq << " Hz" << std::endl;
 
         // Start envelope
         m_envelopeUnit.start();
 
+        // Update sweep unit timer
+        m_sweepUnit.setTimer(m_timer);
+
         // Length counter load
         m_lengthCounter = LENGTH_COUNTER_TABLE[(data & 0xF8) >> 3];
+
+        float freq = 1789773.0f / (16 * (float)(m_timer + 1));
+        std::cout << "Pulse Channel Frequency set to: " << freq << " Hz" << std::endl;
     }
 }

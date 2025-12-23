@@ -2,7 +2,7 @@
 #include <AL/al.h>
 #include <thread>
 
-class APU;
+class Apu;
 
 class AudioStream {
 public:
@@ -14,7 +14,7 @@ public:
     AudioStream();
     ~AudioStream();
 
-    void setApu(APU* apu);
+    void setApu(Apu* apu);
 
     void destroy();
 
@@ -27,7 +27,7 @@ private:
 
     ALuint m_source;
     ALuint m_buffers[NUM_BUFFERS];
-    APU* m_apu;
+    Apu* m_apu;
     int16_t m_audioBuffer[BUFFER_SAMPLES];
     double m_cpuRemainder = 0.0;
     std::thread m_updateThread;

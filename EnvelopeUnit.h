@@ -15,6 +15,8 @@ struct EnvelopeUnit
 
     void setDividerPeriod(uint8_t period);
 
+    bool isLooping() const { return m_loopFlag; }
+
 private:
     bool m_startFlag = false;
     bool m_constantVolumeFlag = false;

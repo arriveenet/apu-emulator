@@ -13,17 +13,22 @@ int main()
     }
 
 
-    APU apu;
+    Apu apu;
 
     AudioStream stream;
     stream.setApu(&apu);
 
     apu.writeStatusRegister(0x04);
     // Pulse 1
-    apu.writeRegister(0x4000, 0b010100011); // Duty cycle 50%, envelope
+    apu.writeRegister(0x4000, 0b10111111); // Duty cycle 50%, envelope
     apu.writeRegister(0x4001, 0x00); // Sweep
     apu.writeRegister(0x4002, 0xFF); // Timer low
     apu.writeRegister(0x4003, 0x09); // Timer high, length counter
+
+    // Triangle
+    apu.writeRegister(0x4008, 0xFF);
+    apu.writeRegister(0x400A, 0xFF);
+    apu.writeRegister(0x400B, 0xF8);
 
     stream.play();
 

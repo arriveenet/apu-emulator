@@ -1,11 +1,11 @@
 #include "Apu.h"
 
-APU::APU()
+Apu::Apu()
     : m_frameSequencer(*this)
 {
 }
 
-void APU::clock()
+void Apu::clock()
 {
     // Clock Frame Sequencer
     m_frameSequencer.clock();
@@ -16,7 +16,7 @@ void APU::clock()
     m_triangleChannel.clock();
 }
 
-void APU::writeRegister(uint16_t address, uint8_t data)
+void Apu::writeRegister(uint16_t address, uint8_t data)
 {
     // Pulse registers
     if (address < 0x4008) {
@@ -29,48 +29,55 @@ void APU::writeRegister(uint16_t address, uint8_t data)
     }
 }
 
-uint8_t APU::readStatusRegister()
+uint8_t Apu::readStatusRegister()
 {
     return 0;
 }
 
-void APU::writeStatusRegister(uint8_t data)
+void Apu::writeStatusRegister(uint8_t data)
 {
     m_triangleChannel.setLengthCounterEnabled(data & 0x04);
 }
 
-void APU::clockFrameCounterQuarterFrame()
+void Apu::clockFrameCounterQuarterFrame()
 {
     m_pulseChannel[0].clockFrameCounterQuarterFrame();
     m_pulseChannel[1].clockFrameCounterQuarterFrame();
     m_triangleChannel.clockFrameCounterQuarterFrame();
 }
 
-void APU::clockFrameCounterHalfFrame()
+void Apu::clockFrameCounterHalfFrame()
 {
     m_pulseChannel[0].clockFrameCounterHalfFrame();
     m_pulseChannel[1].clockFrameCounterHalfFrame();
     m_triangleChannel.clockFrameCounterHalfFrame();
 }
 
-float APU::getOutput()
+float Apu::getOutput()
 {
     /*
      * Mixer formula from NES APU documentation:
      * https: // www.nesdev.org/wiki/APU_Mixer
      */
+    float pulseOut = 0.0f;
     uint8_t pulseSum = m_pulseChannel[0].getOutput() + m_pulseChannel[1].getOutput();
-    if (pulseSum == 0) {
-        return 0.0f;
+    if (pulseSum != 0) {
+        pulseOut = 95.88f / ((8128.0f / pulseSum) + 100.0f);
+    }
+ 
+    float tndOut = 0.0f;
+    uint8_t triangle = m_triangleChannel.getOutput();
+    uint8_t noise = 0;
+    uint8_t dmc = 0;
+    if (triangle + noise + dmc > 0) {
+        tndOut = 159.79f /
+                 (1.0f / ((triangle / 8227.0f) + (noise / 12241.0f) + (dmc / 22638.0f)) + 100.0f);
     }
 
-    float pulseOut = 95.88f / ((8128.0f / pulseSum) + 100.0f);
-    //uint8_t triangle = m_triangleChannel.getOutput();
-    //float out = (triangle / 15.0f) * 2.0f - 1.0f;
-    return pulseOut * 1.0f;
+    return pulseOut + tndOut;
 }
 
-void APU::dump() const
+void Apu::dump() const
 {
     m_triangleChannel.dump();
 }
