@@ -4,6 +4,7 @@ project(apu_emulator CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
+add_subdirectory(third-party/glfw)
 add_subdirectory(third-party/openal-soft)
 
 set(TARGET apu_emulator)
@@ -35,4 +36,5 @@ set (SRCS
 
 add_executable(${TARGET} ${HDRS} ${SRCS})
 
+target_link_libraries(${TARGET} glfw)
 target_link_libraries(${TARGET} OpenAL::OpenAL)

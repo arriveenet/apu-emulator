@@ -1,6 +1,7 @@
 #include "Apu.h"
 #include "AudioEngine.h"
 #include "AudioStream.h"
+#include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <chrono>
 
@@ -8,13 +9,24 @@ bool isRunning = true;
 
 int main()
 {
+    GLFWwindow* window = nullptr;
+    if (!glfwInit()) {
+        return -1;
+    }
+
     if (!AudioEngine::init()) {
         return -1;
     }
 
+     window = glfwCreateWindow(640, 480, "APU Enulator", nullptr, nullptr);
+    if (!window) {
+        glfwTerminate();
+        return -1;
+    }
+
+    glfwMakeContextCurrent(window);
 
     Apu apu;
-
     AudioStream stream;
     stream.setApu(&apu);
 
@@ -32,14 +44,19 @@ int main()
 
     stream.play();
 
-    while (isRunning) {
-        int ch = getchar();
-        if (ch == 'q') {
-            isRunning = false;
-        }
-    }
+    while (!glfwWindowShouldClose(window)) {
+        /* Render here */
+        //glClear(GL_COLOR_BUFFER_BIT);
+
+        /* Swap front and back buffers */
+        glfwSwapBuffers(window);
+
+        /* Poll for and process events */
+        glfwPollEvents();
+     }
 
     AudioEngine::terminate();
+    glfwTerminate();
 
     return 0;
 }
