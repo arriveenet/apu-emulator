@@ -55,12 +55,19 @@ void APU::clockFrameCounterHalfFrame()
 
 float APU::getOutput()
 {
-    uint8_t pulseSum = m_pulseChannel[0].getOutput();
+    /*
+     * Mixer formula from NES APU documentation:
+     * https: // www.nesdev.org/wiki/APU_Mixer
+     */
+    uint8_t pulseSum = m_pulseChannel[0].getOutput() + m_pulseChannel[1].getOutput();
+    if (pulseSum == 0) {
+        return 0.0f;
+    }
 
-    float out = (pulseSum / 8.0f);
+    float pulseOut = 95.88f / ((8128.0f / pulseSum) + 100.0f);
     //uint8_t triangle = m_triangleChannel.getOutput();
     //float out = (triangle / 15.0f) * 2.0f - 1.0f;
-    return out;
+    return pulseOut * 1.0f;
 }
 
 void APU::dump() const

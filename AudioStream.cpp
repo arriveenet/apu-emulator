@@ -48,7 +48,7 @@ void AudioStream::play()
     alGenSources(1, &m_source);
     alGenBuffers(NUM_BUFFERS, m_buffers);
 
-    alSourcef(m_source, AL_GAIN, 0.2f);
+    alSourcef(m_source, AL_GAIN, 2.0f);
     alSourcef(m_source, AL_PITCH, 1.0f);
     alSourcei(m_source, AL_LOOPING, AL_FALSE);
 

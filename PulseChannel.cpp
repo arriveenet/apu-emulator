@@ -49,19 +49,17 @@ void PulseChannel::setRegister(uint8_t registerNumber, uint8_t data)
 {
     // Duty cycle and envelope
     if (registerNumber == 0) {
-        // Volume
-        m_envelopeUnit.setDividerPeriod(data & 0x0F);
-
-        // Envelope loop flag
-        //m_envelopeUnit.
-       // m_envelopeLoopFlag = (data & 0x10) != 0;
-
-        // Constant volume flag
-        //m_envelopeUnit.setConstantVolumeFlag((data & 0x20) != 0);
-        //m_constantVolumeFlag = (data & 0x20) != 0;
-
         // Duty cycle
         m_dutyCycle = (data & 0xC0) >> 6;
+
+        // Envelope loop flag
+        m_envelopeUnit.setLoop((data & 0x20) != 0);
+
+        // Constant volume flag
+        m_envelopeUnit.setConstantVolumeFlag((data & 0x10) != 0);
+
+        // Volume
+        m_envelopeUnit.setDividerPeriod(data & 0x0F);
 
         switch (m_dutyCycle) {
         case 0: std::cout << "Pulse Channel Duty Cycle set to 12.5%" << std::endl;break;
@@ -69,9 +67,9 @@ void PulseChannel::setRegister(uint8_t registerNumber, uint8_t data)
         case 2: std::cout << "Pulse Channel Duty Cycle set to 50%" << std::endl; break;
         case 3: std::cout << "Pulse Channel Duty Cycle set to 25% negated" << std::endl; break;
         }
-        //std::cout << "Pulse Channel Volume set to: " << (int)m_volume << std::endl;
-        //std::cout << "Pulse Channel Envelope Loop Flag: " << m_envelopeLoopFlag << std::endl;
-       // std::cout << "Pulse Channel Constant Volume Flag: " << m_constantVolumeFlag << std::endl;
+        std::cout << "Pulse Channel Volume set to: " << (int)(data & 0x0F) << std::endl;
+        std::cout << "Pulse Channel Envelope Loop Flag: " << ((data & 0x20) != 0) << std::endl;
+        std::cout << "Pulse Channel Constant Volume Flag: " << ((data & 0x10) != 0) << std::endl;
     }
     // Sweep unit
     else if (registerNumber  == 1) {

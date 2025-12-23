@@ -20,7 +20,7 @@ int main()
 
     apu.writeStatusRegister(0x04);
     // Pulse 1
-    apu.writeRegister(0x4000, 0b01000001); // Duty cycle 50%, envelope
+    apu.writeRegister(0x4000, 0b010100011); // Duty cycle 50%, envelope
     apu.writeRegister(0x4001, 0x00); // Sweep
     apu.writeRegister(0x4002, 0xFF); // Timer low
     apu.writeRegister(0x4003, 0x09); // Timer high, length counter
