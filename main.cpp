@@ -1,11 +1,19 @@
 #include "Apu.h"
 #include "AudioEngine.h"
 #include "AudioStream.h"
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <chrono>
 
-bool isRunning = true;
+Apu g_apu;
+
+static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+}
 
 int main()
 {
@@ -25,28 +33,30 @@ int main()
     }
 
     glfwMakeContextCurrent(window);
+    gladLoadGL();
+    glfwSetKeyCallback(window, keyCallback);
 
-    Apu apu;
     AudioStream stream;
-    stream.setApu(&apu);
+    stream.setApu(&g_apu);
 
-    apu.writeStatusRegister(0x04);
+    g_apu.writeStatusRegister(0x04);
+
     // Pulse 1
-    apu.writeRegister(0x4000, 0b10111111); // Duty cycle 50%, envelope
-    apu.writeRegister(0x4001, 0x00); // Sweep
-    apu.writeRegister(0x4002, 0xFF); // Timer low
-    apu.writeRegister(0x4003, 0x09); // Timer high, length counter
+    g_apu.writeRegister(0x4000, 0b10111111); // Duty cycle 50%, envelope
+    g_apu.writeRegister(0x4001, 0x00); // Sweep
+    g_apu.writeRegister(0x4002, 0xFF); // Timer low
+    g_apu.writeRegister(0x4003, 0x09); // Timer high, length counter
 
     // Triangle
-    apu.writeRegister(0x4008, 0xFF);
-    apu.writeRegister(0x400A, 0xFF);
-    apu.writeRegister(0x400B, 0xF8);
+    g_apu.writeRegister(0x4008, 0xFF);
+    g_apu.writeRegister(0x400A, 0xFF);
+    g_apu.writeRegister(0x400B, 0xF8);
 
     stream.play();
 
     while (!glfwWindowShouldClose(window)) {
         /* Render here */
-        //glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
