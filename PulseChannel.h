@@ -15,6 +15,9 @@ struct PulseChannel {
 
     void setRegister(uint8_t registerNumber, uint8_t data);
 
+    bool getLengthCounterOutput() const;
+    void setLengthCounterEnabled(bool enabled);
+
 private:
     uint8_t m_lengthCounter = 0;
 

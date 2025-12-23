@@ -16,8 +16,6 @@ struct TriangleChannel {
     bool getLengthCounterOutput() const;
     void setLengthCounterEnabled(bool enabled);
 
-    void dump() const;
-
 private:
     uint16_t m_frequency = 0;
     uint8_t m_lengthCounter = 0;

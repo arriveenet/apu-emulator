@@ -31,11 +31,23 @@ void Apu::writeRegister(uint16_t address, uint8_t data)
 
 uint8_t Apu::readStatusRegister()
 {
-    return 0;
+    uint8_t status = 0;
+    if (m_pulseChannel[0].getLengthCounterOutput()) {
+        status |= 0x01;
+    }
+    if (m_pulseChannel[1].getLengthCounterOutput()) {
+        status |= 0x02;
+    }
+    if (m_triangleChannel.getLengthCounterOutput()) {
+        status |= 0x04;
+    }
+    return status;
 }
 
 void Apu::writeStatusRegister(uint8_t data)
 {
+    m_pulseChannel[0].setLengthCounterEnabled(data & 0x01);
+    m_pulseChannel[1].setLengthCounterEnabled(data & 0x02);
     m_triangleChannel.setLengthCounterEnabled(data & 0x04);
 }
 
@@ -75,9 +87,4 @@ float Apu::getOutput()
     }
 
     return pulseOut + tndOut;
-}
-
-void Apu::dump() const
-{
-    m_triangleChannel.dump();
 }

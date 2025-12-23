@@ -94,13 +94,3 @@ void TriangleChannel::setLengthCounterEnabled(bool enabled)
         m_lengthCounter = 0;
     }
 }
-
-void TriangleChannel::dump() const
-{
-    std::cout << "Triangle Channel State:" << std::endl;
-    std::cout << "  Linear Counter: " << static_cast<int>(m_linearCounter) << std::endl;
-    std::cout << "  Linear Control Flag: " << m_linearControlFlag << std::endl;
-    std::cout << "  Linear Reload Flag: " << m_linearReloadFlag << std::endl;
-    std::cout << "  Frequency: " << m_frequency << std::endl;
-    std::cout << "  Length Counter: " << static_cast<int>(m_lengthCounter) << std::endl;
-}

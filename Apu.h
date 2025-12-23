@@ -21,8 +21,6 @@ public:
     // Output sample
     float getOutput();
 
-    void dump() const;
-
 private:
     void clockFrameCounterQuarterFrame();
     void clockFrameCounterHalfFrame();

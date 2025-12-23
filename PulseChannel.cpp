@@ -121,3 +121,15 @@ void PulseChannel::setRegister(uint8_t registerNumber, uint8_t data)
         std::cout << "Pulse Channel Frequency set to: " << freq << " Hz" << std::endl;
     }
 }
+
+bool PulseChannel::getLengthCounterOutput() const
+{
+    return m_lengthCounter > 0;
+}
+
+void PulseChannel::setLengthCounterEnabled(bool enabled)
+{
+    if (!enabled) {
+        m_lengthCounter = 0;
+    }
+}
