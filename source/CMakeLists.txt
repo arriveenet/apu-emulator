@@ -16,6 +16,7 @@ set (HDRS
     apu/TriangleChannel.h
     AudioEngine.h
     AudioStream.h
+    canon.h
     Tracker.h
 )
 

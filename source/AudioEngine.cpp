@@ -1,5 +1,6 @@
 #include "AudioEngine.h"
 #include <stdio.h>
+#include "Tracker.h"
 
 ALCdevice* AudioEngine::s_pALDevice = nullptr;
 ALCcontext* AudioEngine::s_pALContext = nullptr;
