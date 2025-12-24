@@ -8,35 +8,4 @@ add_subdirectory(third-party/glad)
 add_subdirectory(third-party/glfw)
 add_subdirectory(third-party/openal-soft)
 
-set(TARGET apu_emulator)
-
-set (HDRS
-    Apu.h
-    AudioEngine.h
-    AudioStream.h
-    EnvelopeUnit.h
-    FrameSequencer.h
-    LengthCounter.h
-    SweepUnit.h
-    PulseChannel.h
-    TriangleChannel.h
-)
-
-set (SRCS
-    Apu.cpp
-    AudioEngine.cpp
-    AudioStream.cpp
-    EnvelopeUnit.cpp
-    LengthCounter.cpp
-    FrameSequencer.cpp
-    SweepUnit.cpp
-    PulseChannel.cpp
-    TriangleChannel.cpp
-    main.cpp
-)
-
-add_executable(${TARGET} ${HDRS} ${SRCS})
-
-target_link_libraries(${TARGET} glad)
-target_link_libraries(${TARGET} glfw)
-target_link_libraries(${TARGET} OpenAL::OpenAL)
+add_subdirectory(source)

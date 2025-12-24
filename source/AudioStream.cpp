@@ -1,5 +1,5 @@
 #include "AudioStream.h"
-#include "Apu.h"
+#include "apu/Apu.h"
 #include <AL/alext.h>
 #include <string.h>
 #include <stdio.h>

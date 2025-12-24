@@ -1,6 +1,6 @@
-#include "Apu.h"
 #include "AudioEngine.h"
 #include "AudioStream.h"
+#include "apu/Apu.h"
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
