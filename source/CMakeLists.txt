@@ -16,8 +16,15 @@ set (HDRS
     apu/TriangleChannel.h
     AudioEngine.h
     AudioStream.h
+    ControlPanel.h
+    IWindow.h
+    Channel.h
     canon.h
+    EditorContext.h
+    Note.h
     Tracker.h
+    Song.h
+    Pattern.h
 )
 
 set (SRCS
@@ -30,7 +37,11 @@ set (SRCS
     apu/TriangleChannel.cpp
     AudioEngine.cpp
     AudioStream.cpp
+    ControlPanel.cpp
+    EditorContext.cpp
     Tracker.cpp
+    Song.cpp
+    Pattern.cpp
     main.cpp
 )
 
@@ -39,3 +50,4 @@ add_executable(${TARGET} ${HDRS} ${SRCS})
 target_link_libraries(${TARGET} glad)
 target_link_libraries(${TARGET} glfw)
 target_link_libraries(${TARGET} OpenAL::OpenAL)
+target_link_libraries(${TARGET} imgui)

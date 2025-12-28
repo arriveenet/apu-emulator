@@ -20,7 +20,7 @@ PulseChannel::PulseChannel()
 void PulseChannel::clock()
 {
     if (m_timerCounter == 0) {
-        m_timerCounter = m_sweepUnit.getTargetTimer();
+        m_timerCounter = m_sweepUnit.getTargetTimer() * 2;
         m_sequenceStep = (m_sequenceStep + 1) & 0x07; // 0–7
     }
     else {
