@@ -25,6 +25,7 @@ set (HDRS
     Tracker.h
     Song.h
     Pattern.h
+    PatternEditor.h
 )
 
 set (SRCS
@@ -42,6 +43,7 @@ set (SRCS
     Tracker.cpp
     Song.cpp
     Pattern.cpp
+    PatternEditor.cpp
     main.cpp
 )
 

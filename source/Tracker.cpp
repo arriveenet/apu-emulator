@@ -1,6 +1,7 @@
 #include "Tracker.h"
 #include "AudioEngine.h"
 #include "ControlPanel.h"
+#include "PatternEditor.h"
 
 Tracker::Tracker()
 {
@@ -31,6 +32,7 @@ bool Tracker::init()
 
     // Initialize windows
     m_windows.push_back(new ControlPanel());
+    m_windows.push_back(new PatternEditor());
 
     return true;
 }
