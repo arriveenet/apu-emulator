@@ -27,6 +27,8 @@ set(SRCS
     ${SRC_DIR}/imgui_draw.cpp
     ${SRC_DIR}/imgui_tables.cpp
     ${SRC_DIR}/imgui_widgets.cpp
+    ${SRC_DIR}/backends/imgui_impl_glfw.cpp
+    ${SRC_DIR}/backends/imgui_impl_opengl3.cpp
 )
 
 add_library(${TARGET} STATIC ${PRIVATE_HDRS} ${PUBLIC_HDRS} ${SRCS})
