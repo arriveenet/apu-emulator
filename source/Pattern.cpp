@@ -5,6 +5,14 @@ Pattern::Pattern()
 {
 }
 
+Pattern::~Pattern()
+{
+}
+
+void Pattern::inti()
+{
+}
+
 void Pattern::setNote(const std::vector<Note>& data)
 {
     m_data = data;

@@ -5,6 +5,9 @@
 class Pattern {
 public:
     Pattern();
+    ~Pattern();
+
+    void inti();
 
     void setNote(const std::vector<Note>& data);
     void setNote(std::vector<Note>&& data);
