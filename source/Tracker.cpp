@@ -2,6 +2,7 @@
 #include "AudioEngine.h"
 #include "ControlPanel.h"
 #include "PatternEditor.h"
+#include <imgui.h>
 
 Tracker::Tracker()
 {

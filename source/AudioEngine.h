@@ -25,6 +25,9 @@ public:
 
     void update();
 
+    int getCurrentRow() const { return m_currentRow; }
+    int getTickCounter() const { return m_tickCounter; }
+
 protected:
     void processRow(int row);
 

@@ -1,4 +1,5 @@
 #include "PatternEditor.h"
+#include "AudioEngine.h"
 #include "EditorContext.h"
 
 PatternEditor::PatternEditor()
@@ -16,6 +17,7 @@ void PatternEditor::draw(EditorContext& context)
     ImGui::Begin("Pattern Editor");
     auto song = context.getCurrentSong();
     auto& pattern = song->getPattern();
+    auto audioEngine = AudioEngine::getInstance();
 
     if (ImGui::BeginTable("table1", 5, m_tableFlags)) {
         // Setup columns
@@ -28,6 +30,12 @@ void PatternEditor::draw(EditorContext& context)
 
         for (size_t row = 0; row < pattern.size(); row++) {
             ImGui::TableNextRow();
+
+            if (audioEngine->getCurrentRow() == row) {
+                ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0, IM_COL32(255, 0, 0, 100));
+                ImGui::SetScrollHereY(0.5f);
+            }
+
             for (size_t column = 0; column < 5; column++) {
                 ImGui::TableSetColumnIndex(column);
 
