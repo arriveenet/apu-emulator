@@ -1,4 +1,5 @@
 #pragma once
+#include "Pattern.h"
 #include <stdint.h>
 #include <string>
 
@@ -19,11 +20,13 @@ public:
     void setTempo(int tempo) { m_tempo = tempo; }
     int getTempo() const { return m_tempo; }
 
-    void update();
+    void setPattern(const Pattern& pattern) { m_pattern = pattern; }
+    Pattern& getPattern() { return m_pattern; }
 
 private:
     std::string m_title;
     int m_speed;
     int m_tempo;
     uint32_t m_tickCounter = 0;
+    Pattern m_pattern;
 };

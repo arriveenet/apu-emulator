@@ -1,4 +1,5 @@
 #include "ControlPanel.h"
+#include "AudioEngine.h"
 #include <imgui.h>
 
 ControlPanel::ControlPanel()
@@ -9,17 +10,28 @@ ControlPanel::~ControlPanel()
 {
 }
 
-void ControlPanel::draw(const EditorContext& context)
+void ControlPanel::draw(EditorContext& context)
 {
     auto song = context.getCurrentSong();
     int speed = song->getSpeed();
     int tempo = song->getTempo();
 
     ImGui::Begin("Control Panel");
-    ImGui::InputInt("Speed", &speed);
-    ImGui::InputInt("Tempo", &tempo);
-    ImGui::End();
+    if (ImGui::Button("Play")) {
+        AudioEngine::getInstance()->play(song);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Stop")) {
+        AudioEngine::getInstance()->stop();
+    }
 
-    song->setSpeed(speed);
-    song->setTempo(tempo);
+    if (ImGui::InputInt("Speed", &speed)) {
+        song->setSpeed(speed);
+    }
+    if (ImGui::InputInt("Tempo", &tempo)) {
+
+        song->setTempo(tempo);
+    }
+
+    ImGui::End();
 }

@@ -21,11 +21,6 @@ bool Tracker::init()
         return false;
     }
 
-    // Initialize audio
-    m_audioStream.setApu(&m_apu);
-    m_apu.writeStatusRegister(0x04);
-    m_audioStream.play();
-
     // Create a new song
     m_song = std::make_shared<Song>("New song");
     m_editorContext.setCurrentSong(m_song);
@@ -39,7 +34,7 @@ bool Tracker::init()
 
 void Tracker::update()
 {
-    m_song->update();
+    AudioEngine::getInstance()->update();
 }
 
 void Tracker::draw()
@@ -55,9 +50,10 @@ void Tracker::play()
 
 void Tracker::stop()
 {
+    AudioEngine::getInstance()->stop();
 }
 
 void Tracker::reset()
 {
-    m_apu.writeStatusRegister(0x00);
+    AudioEngine::getInstance()->reset();
 }

@@ -5,5 +5,5 @@ public:
     ControlPanel();
     ~ControlPanel();
 
-    void draw(const EditorContext& context) override;
+    void draw(EditorContext& context) override;
 };

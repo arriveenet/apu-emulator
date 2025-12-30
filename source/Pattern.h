@@ -6,7 +6,12 @@ class Pattern {
 public:
     Pattern();
 
+    void setNote(const std::vector<Note>& data);
+    void setNote(std::vector<Note>&& data);
+
     Note& getNote(int row, int channel);
+
+    size_t size() const { return m_data.size(); }
 
 private:
     std::vector<Note> m_data;

@@ -1,7 +1,8 @@
 #pragma once
 #include <stdint.h>
 
-enum Key : uint8_t {
+enum Key : int8_t {
+    NONE = -1,
     A,
     A_SHARP,
     B,
@@ -20,8 +21,8 @@ enum Key : uint8_t {
 
 static constexpr float NOTE_OCTAVE[] = {27.5, 55, 110, 220, 440, 880, 1760, 3520, 7040, 0};
 
-static constexpr char NOTE_NAMES[][3] = {"A", "A#", "B",  "C", "C#", "D", "D#",
-                                      "E", "F",  "F#", "G", "G#", "*"};
+static constexpr char NOTE_NAMES[][3] = {"A-", "A#", "B-",  "C-", "C#", "D-", "D#",
+                                      "E-", "F-",  "F#", "G-", "G#", "=="};
 
 struct Note {
     Key key;

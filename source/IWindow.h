@@ -5,5 +5,5 @@ class IWindow {
 public:
     virtual ~IWindow() = default;
 
-    virtual void draw(const EditorContext& context) = 0;
+    virtual void draw(EditorContext& context) = 0;
 };
