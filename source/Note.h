@@ -25,9 +25,9 @@ static constexpr char NOTE_NAMES[][3] = {"A-", "A#", "B-",  "C-", "C#", "D-", "D
                                       "E-", "F-",  "F#", "G-", "G#", "=="};
 
 struct Note {
-    Key key;
-    int oct;
-    unsigned int length;
-    float decay;
-    float freq;
+    Key key = Key::NONE;
+    int oct = 0;
+    unsigned int length = 0;
+    float decay = 0.0f;
+    float freq = 0.0f;
 };

@@ -26,10 +26,12 @@ public:
     void update();
 
     int getCurrentRow() const { return m_currentRow; }
-    int getTickCounter() const { return m_tickCounter; }
+    unsigned int getTickCounter() const { return m_tickCounter; }
+
+    bool isPlaying() const { return m_isPlaying; }
 
 protected:
-    void processRow(int row);
+    void processRow(int row, int channel);
 
 private:
     AudioEngine();

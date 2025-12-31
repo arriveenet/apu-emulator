@@ -1,5 +1,5 @@
 #include "Pattern.h"
-#include <algorithm>
+#include  <stdio.h>
 
 Pattern::Pattern()
 {
@@ -9,21 +9,20 @@ Pattern::~Pattern()
 {
 }
 
-void Pattern::inti()
+void Pattern::init(int rows, int channels)
 {
+    m_rowCount = rows;
+    m_channelCount = channels;
+    m_data.resize(rows * channels);
+    m_data.assign(rows * channels, Note());
 }
 
-void Pattern::setNote(const std::vector<Note>& data)
+int Pattern::getRowCount() const
 {
-    m_data = data;
+    return m_rowCount;
 }
 
-void Pattern::setNote(std::vector<Note>&& data)
+int Pattern::getChannelCount() const
 {
-    m_data = std::move(data);
-}
-
-Note& Pattern::getNote(int row, int channel)
-{
-    return m_data[row];
+    return m_channelCount;
 }

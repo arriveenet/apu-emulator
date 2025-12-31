@@ -1,4 +1,5 @@
 #pragma once
+#include "Channel.h"
 #include "Note.h"
 #include <vector>
 
@@ -7,15 +8,23 @@ public:
     Pattern();
     ~Pattern();
 
-    void inti();
+    void init(int rows, int channels = CHANNEL_DEFAULT_COUNT);
 
-    void setNote(const std::vector<Note>& data);
-    void setNote(std::vector<Note>&& data);
+    [[nodiscard]] int getRowCount() const;
+    [[nodiscard]] int getChannelCount() const;
 
-    Note& getNote(int row, int channel);
+    Note& getNote(int row, int channel)
+    {
+        return m_data[row * m_channelCount + channel];
+    }
 
-    size_t size() const { return m_data.size(); }
+    [[nodiscard]] const Note& getNote(int row, int channel) const
+    {
+        return m_data[row * m_channelCount + channel];
+    }
 
 private:
+    int m_rowCount = 0;
+    int m_channelCount = 0;
     std::vector<Note> m_data;
 };
