@@ -18,10 +18,11 @@ void PatternEditor::draw(EditorContext& context)
     auto song = context.getCurrentSong();
     auto& pattern = song->getPattern();
     auto audioEngine = AudioEngine::getInstance();
+    const int columnCount = pattern.getChannelCount() + 1;
 
-    if (ImGui::BeginTable("table1", pattern.getChannelCount(), m_tableFlags)) {
+    if (ImGui::BeginTable("table1", columnCount, m_tableFlags)) {
         // Setup columns
-        ImGui::TableSetupColumn("Row");
+        ImGui::TableSetupColumn("Row", ImGuiTableColumnFlags_WidthFixed | ImGuiTableColumnFlags_NoResize, 0.0f);
         ImGui::TableSetupColumn("Pulse 1");
         ImGui::TableSetupColumn("Pulse 2");
         ImGui::TableSetupColumn("Triangle");
@@ -38,16 +39,21 @@ void PatternEditor::draw(EditorContext& context)
                 }
             }
 
-            for (int column = 0; column < pattern.getChannelCount(); column++) {
+            for (int column = 0; column < columnCount; column++) {
                 ImGui::TableSetColumnIndex(column);
 
-                const Note& n = pattern.getNote(row, column);
+                if (column == 0) {
+                    ImGui::Text("%d", row);
+                    continue;
+                }
+
+                const Note& n = pattern.getNote(row, column - 1);
                 switch (n.key) {
                 case NONE:
                     ImGui::Text("--- --- ---");
                     break;
                 case REST:
-                    ImGui::Text("%s%d %d- ---", NOTE_NAMES[n.key], n.oct, n.length);
+                    ImGui::Text("%s= === ===", NOTE_NAMES[n.key], n.oct, n.length);
                     break;
                 default:
                     ImGui::Text("%s%d %d- ---", NOTE_NAMES[n.key], n.oct, n.length);

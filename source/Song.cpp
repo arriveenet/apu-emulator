@@ -4,7 +4,7 @@
 Song::Song(std::string_view title)
     : Song(title, DEFAULT_SPEED, DEFAULT_TEMPO)
 {
-    m_pattern.init(10000);
+    m_pattern.init(9000);
 
     std::vector<Note> pulse1;
     for (const auto& note : canon::PULSE1_TABLE) {
