@@ -4,7 +4,7 @@
 Song::Song(std::string_view title)
     : Song(title, DEFAULT_SPEED, DEFAULT_TEMPO)
 {
-    m_pattern.init(9000);
+    m_pattern.init(2000);
 
     std::vector<Note> pulse1;
     for (const auto& note : canon::PULSE1_TABLE) {
@@ -34,7 +34,7 @@ Song::Song(std::string_view title)
     for (const auto& note : canon::TRIANGLE_TABLE) {
         const unsigned int len = note.length / 8;
         int oct = note.key >= 3 && note.key < 12 ? note.oct - 1 : note.oct;
-        Note adjustedNote = {note.key, oct+=2, len};
+        Note adjustedNote = {note.key, oct, len};
         triangle.push_back(adjustedNote);
 
         for (int i = 0; i < len - 1; i++) {

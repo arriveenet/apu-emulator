@@ -3,6 +3,7 @@
 #include "ControlPanel.h"
 #include "PatternEditor.h"
 #include <imgui.h>
+#include <GLFW/glfw3.h>
 
 Tracker::Tracker()
 {
@@ -57,4 +58,17 @@ void Tracker::stop()
 void Tracker::reset()
 {
     AudioEngine::getInstance()->reset();
+}
+
+void Tracker::keyCallback(int key, bool isPressed)
+{
+    if (!isPressed) {
+        AudioEngine::getInstance()->noteOff();
+        return;
+    }
+
+    switch (key) {
+    case GLFW_KEY_Z: AudioEngine::getInstance()->noteOn(Key::G, 3); break;
+    default: break;
+    }
 }

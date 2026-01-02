@@ -7,12 +7,16 @@
 #include <chrono>
 #include "Tracker.h"
 
+Tracker g_tracker;
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+    const bool isPressed = (action == GLFW_PRESS);
+    if (key == GLFW_KEY_ESCAPE && isPressed) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
+
+    g_tracker.keyCallback(key, isPressed);
 }
 
 int main()
@@ -53,16 +57,14 @@ int main()
 
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-
-    Tracker tracker;
-    if (!tracker.init()) {
+    if (!g_tracker.init()) {
         printf("Failed to initialize Tracker.\n");
         return -1;
     }
 
     while (!glfwWindowShouldClose(window)) {
         // Update tracker state
-        tracker.update();
+        g_tracker.update();
 
         /* Poll for and process events */
         glfwPollEvents();
@@ -73,7 +75,7 @@ int main()
         ImGui::NewFrame();
 
         // Draw
-        tracker.draw();
+        g_tracker.draw();
 
         // Rendering
         ImGui::Render();

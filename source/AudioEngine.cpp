@@ -1,6 +1,8 @@
 #include "AudioEngine.h"
 #include <stdio.h>
 #include <math.h>
+
+#include <utility>
 #include "Tracker.h"
 
 AudioEngine AudioEngine::s_instance;
@@ -68,7 +70,7 @@ void AudioEngine::terminate()
 void AudioEngine::play(std::shared_ptr<Song> song)
 {
     m_isPlaying = true;
-    m_currentSong = song;
+    m_currentSong = std::move(song);
     m_currentRow = 0;
 }
 
@@ -116,33 +118,63 @@ void AudioEngine::processRow(int row, int channel)
     }
 
     const float freq = NOTE_OCTAVE[note.oct] * powf(2, note.key / 12.f);
-    uint16_t timer = static_cast<uint16_t>((1789773 / (8.0 * freq)) - 1.0);
-    if (timer < 2)
-        timer = 2;
+    const auto timer =
+        static_cast<uint16_t>((1789773 / ((channel == Channel::Triangle ? 32.f : 16.f) * freq)) - 1.0);
+
+    uint8_t status =  s_apu.readStatusRegister();
+    uint8_t channelFlag = 0;
+    switch (channel) {
+    case Channel::Pulse1: channelFlag = 0x01; break;
+    case Channel::Pulse2: channelFlag = 0x02; break;
+    case Channel::Triangle: channelFlag = 0x04; break;
+    default: break;
+    }
 
     if (note.key == REST) {
+        s_apu.writeStatusRegister(status &= ~channelFlag);
         return;
     }
 
     if (channel == Channel::Pulse1) {
+        s_apu.writeStatusRegister(status | channelFlag);
         s_apu.writeRegister(0x4000, 0xff);                // Volume Envelope
         s_apu.writeRegister(0x4001, 0x00);                // Sweep
         s_apu.writeRegister(0x4002, timer & 0xFF);        // Frequency low
         s_apu.writeRegister(0x4003, (timer >> 8) & 0x07); // Frequency high + trigger
     }
     else if (channel == Channel::Pulse2) {
+        s_apu.writeStatusRegister(status | channelFlag);
         s_apu.writeRegister(0x4004, 0b01111111);                // Volume Envelope
         s_apu.writeRegister(0x4005, 0x00);                // Sweep
         s_apu.writeRegister(0x4006, timer & 0xFF);        // Frequency low
         s_apu.writeRegister(0x4007, (timer >> 8) & 0x07); // Frequency high + trigger
-
     }
     else if (channel == Channel::Triangle) {
+        s_apu.writeStatusRegister(status | channelFlag);
         s_apu.writeRegister(0x4008, 0xff);                // Volume Envelope
         s_apu.writeRegister(0x400A, timer & 0xFF);        // Frequency low
         s_apu.writeRegister(0x400B, (timer >> 8) & 0x07); // Frequency high + trigger
-
     }
+}
+
+void AudioEngine::noteOn(Key key, int oct)
+{
+    const float freq = NOTE_OCTAVE[oct] * powf(2, key / 12.f);
+    const auto timer =
+        static_cast<uint16_t>((1789773 / (32 * freq)) - 1.0);
+
+    const uint8_t status =  s_apu.readStatusRegister();
+
+    s_apu.writeStatusRegister(status | 0x04);
+    s_apu.writeRegister(0x4008, 0xff);                // Volume Envelope
+    s_apu.writeRegister(0x400A, timer & 0xFF);        // Frequency low
+    s_apu.writeRegister(0x400B, (timer >> 8) & 0x07); // Frequency high + trigger
+}
+
+void AudioEngine::noteOff()
+{
+    uint8_t status =  s_apu.readStatusRegister();
+    s_apu.writeStatusRegister(status &= ~0x04);
 }
 
 AudioEngine::AudioEngine()

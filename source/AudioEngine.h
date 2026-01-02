@@ -30,6 +30,10 @@ public:
 
     bool isPlaying() const { return m_isPlaying; }
 
+    void noteOn(Key key, int oct);
+
+    void noteOff();
+
 protected:
     void processRow(int row, int channel);
 

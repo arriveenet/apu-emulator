@@ -22,6 +22,8 @@ public:
 
     void reset();
 
+    void keyCallback(int key, bool isPressed);
+
 private:
     EditorContext m_editorContext;
     std::shared_ptr<Song> m_song;
