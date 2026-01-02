@@ -7,6 +7,8 @@
 #include <chrono>
 #include "Tracker.h"
 
+static constexpr double MS_PER_UPDATE = 1.0 / 60.0;
+
 Tracker g_tracker;
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -62,9 +64,24 @@ int main()
         return -1;
     }
 
+    double accumlator = 0.0;
+    auto currentTime = std::chrono::steady_clock::now();
+
     while (!glfwWindowShouldClose(window)) {
-        // Update tracker state
-        g_tracker.update();
+        auto nowTime = std::chrono::steady_clock::now();
+        auto deltaTime =
+            std::chrono::duration_cast<std::chrono::microseconds>(nowTime - currentTime).count() /
+            1000000.0;
+        deltaTime = std::min(deltaTime, 0.25);
+        currentTime = nowTime;
+
+        accumlator += deltaTime;
+
+        while (accumlator >= MS_PER_UPDATE) {
+            // Update tracker state
+            g_tracker.update();
+            accumlator -= MS_PER_UPDATE;
+        }
 
         /* Poll for and process events */
         glfwPollEvents();
