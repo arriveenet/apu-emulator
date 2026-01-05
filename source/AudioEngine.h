@@ -13,6 +13,8 @@ public:
     static bool init();
     static void terminate();
 
+    static AudioStream& getStream();
+
     // Delete copy constructor and assignment operator
     AudioEngine(const AudioEngine&) = delete;
     AudioEngine& operator=(const AudioEngine&) = delete;

@@ -28,4 +28,5 @@ private:
     EditorContext m_editorContext;
     std::shared_ptr<Song> m_song;
     std::vector<IWindow*> m_windows;
+    std::vector<Note> m_activeKeys;
 };

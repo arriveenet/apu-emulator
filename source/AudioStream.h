@@ -1,5 +1,6 @@
 #pragma once
 #include <AL/al.h>
+#include <atomic>
 #include <thread>
 
 class Apu;
@@ -10,6 +11,13 @@ public:
     static constexpr int BUFFER_SAMPLES = 512;
     static constexpr int SAMPLE_RATE = 44100;
     static constexpr double CPU_FREQUENCY = 1789773.0;
+
+    struct WaveBuffer {
+        float samples[BUFFER_SAMPLES];
+        std::atomic<int> writeIndex{0};
+    };
+
+    static const WaveBuffer& getWaveBuffer();
 
     AudioStream();
     ~AudioStream();
@@ -25,6 +33,7 @@ public:
 private:
     void fillBuffer();
 
+    static WaveBuffer s_waveBuffer;
     ALuint m_source;
     ALuint m_buffers[NUM_BUFFERS];
     Apu* m_apu;

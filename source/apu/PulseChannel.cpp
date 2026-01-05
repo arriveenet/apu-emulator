@@ -66,15 +66,15 @@ void PulseChannel::setRegister(uint8_t registerNumber, uint8_t data)
         // Volume
         m_envelopeUnit.setDividerPeriod(data & 0x0F);
 
-        switch (m_dutyCycle) {
-        case 0: std::cout << "Pulse Channel Duty Cycle set to 12.5%" << std::endl;break;
-        case 1: std::cout << "Pulse Channel Duty Cycle set to 25%" << std::endl; break;
-        case 2: std::cout << "Pulse Channel Duty Cycle set to 50%" << std::endl; break;
-        case 3: std::cout << "Pulse Channel Duty Cycle set to 25% negated" << std::endl; break;
-        }
-        std::cout << "Pulse Channel Envelope - Loop: " << ((data & 0x20) != 0)
-                  << ", Constant Volume: " << ((data & 0x10) != 0)
-                  << ", Volume/Period: " << (int)(data & 0x0F) << std::endl;
+        // switch (m_dutyCycle) {
+        // case 0: std::cout << "Pulse Channel Duty Cycle set to 12.5%" << std::endl;break;
+        // case 1: std::cout << "Pulse Channel Duty Cycle set to 25%" << std::endl; break;
+        // case 2: std::cout << "Pulse Channel Duty Cycle set to 50%" << std::endl; break;
+        // case 3: std::cout << "Pulse Channel Duty Cycle set to 25% negated" << std::endl; break;
+        // }
+        // std::cout << "Pulse Channel Envelope - Loop: " << ((data & 0x20) != 0)
+        //           << ", Constant Volume: " << ((data & 0x10) != 0)
+        //           << ", Volume/Period: " << (int)(data & 0x0F) << std::endl;
     }
     // Sweep unit
     else if (registerNumber  == 1) {
@@ -95,10 +95,10 @@ void PulseChannel::setRegister(uint8_t registerNumber, uint8_t data)
         bool negateFlag = (data & 0x08) != 0;
         uint8_t shiftCount = data & 0x07;
 
-        std::cout << "Pulse Channel Sweep Unit - Enabled: " << enabled
-                  << ", Period: " << (int)period
-                  << ", Negate Flag: " << negateFlag
-                  << ", Shift Count: " << (int)shiftCount << std::endl;
+        // std::cout << "Pulse Channel Sweep Unit - Enabled: " << enabled
+        //           << ", Period: " << (int)period
+        //           << ", Negate Flag: " << negateFlag
+        //           << ", Shift Count: " << (int)shiftCount << std::endl;
     }
     // Timer low
     else if (registerNumber == 2) {
@@ -117,8 +117,8 @@ void PulseChannel::setRegister(uint8_t registerNumber, uint8_t data)
         // Length counter load
         m_lengthCounter = LENGTH_COUNTER_TABLE[(data & 0xF8) >> 3];
 
-        float freq = 1789773.0f / (16 * (float)(m_timer + 1));
-        std::cout << "Pulse Channel Frequency set to: " << freq << " Hz" << std::endl;
+        // float freq = 1789773.0f / (16 * (float)(m_timer + 1));
+        // std::cout << "Pulse Channel Frequency set to: " << freq << " Hz" << std::endl;
     }
 }
 

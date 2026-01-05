@@ -67,6 +67,11 @@ void AudioEngine::terminate()
     }
 }
 
+AudioStream& AudioEngine::getStream()
+{
+    return  s_audioStream;
+}
+
 void AudioEngine::play(std::shared_ptr<Song> song)
 {
     m_isPlaying = true;
@@ -161,20 +166,21 @@ void AudioEngine::noteOn(Key key, int oct)
 {
     const float freq = NOTE_OCTAVE[oct] * powf(2, key / 12.f);
     const auto timer =
-        static_cast<uint16_t>((1789773 / (32 * freq)) - 1.0);
+        static_cast<uint16_t>((1789773 / (16 * freq)) - 1.0);
 
     const uint8_t status =  s_apu.readStatusRegister();
 
-    s_apu.writeStatusRegister(status | 0x04);
-    s_apu.writeRegister(0x4008, 0xff);                // Volume Envelope
-    s_apu.writeRegister(0x400A, timer & 0xFF);        // Frequency low
-    s_apu.writeRegister(0x400B, (timer >> 8) & 0x07); // Frequency high + trigger
+    s_apu.writeStatusRegister(status | 0x01);
+    s_apu.writeRegister(0x4000, 0xff);                // Volume Envelope
+    s_apu.writeRegister(0x4001, 0x00);                // Sweep
+    s_apu.writeRegister(0x4002, timer & 0xFF);        // Frequency low
+    s_apu.writeRegister(0x4003, (timer >> 8) & 0x07); // Frequency high + trigger
 }
 
 void AudioEngine::noteOff()
 {
     uint8_t status =  s_apu.readStatusRegister();
-    s_apu.writeStatusRegister(status &= ~0x04);
+    s_apu.writeStatusRegister(status &= ~0x01);
 }
 
 AudioEngine::AudioEngine()

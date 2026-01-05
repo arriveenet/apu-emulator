@@ -6,7 +6,6 @@
 #include <chrono>
 #include <algorithm>
 
-
 AudioStream::AudioStream()
     : m_source(0)
     , m_buffers{0}
@@ -110,8 +109,8 @@ void AudioStream::fillBuffer()
             m_apu->clock();
             m_cpuRemainder -= 1.0f;
         }
-        const float s = m_apu->getOutput();
-        int16_t pcm = static_cast<int16_t>(std::clamp(s, -1.0f, 1.0f) * 32767.0f);
+        const float s = std::clamp(m_apu->getOutput(), -1.0f, 1.0f);
+        const int16_t pcm = static_cast<int16_t>(s * 32767.0f);
         m_audioBuffer[i] = pcm;
     }
 }

@@ -1,6 +1,8 @@
 #include "ControlPanel.h"
 #include "AudioEngine.h"
+#include  "AudioStream.h"
 #include <imgui.h>
+#include <math.h>
 
 ControlPanel::ControlPanel()
 {
@@ -23,6 +25,12 @@ void ControlPanel::draw(EditorContext& context)
     ImGui::SameLine();
     if (ImGui::Button("Stop")) {
         AudioEngine::getInstance()->stop();
+    }
+
+    int selectedOct = context.getOctave();
+    const char* octItems[] = { "0", "1", "2", "3", "4", "5", "6", "7" };
+    if (ImGui::Combo("Octave", &selectedOct, octItems, IM_ARRAYSIZE(octItems))) {
+        context.setOctave(selectedOct);
     }
 
     if (ImGui::InputInt("Speed", &speed)) {

@@ -13,7 +13,7 @@ Tracker g_tracker;
 
 static void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    const bool isPressed = (action == GLFW_PRESS);
+    const bool isPressed = (action == GLFW_PRESS || action == GLFW_REPEAT);
     if (key == GLFW_KEY_ESCAPE && isPressed) {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }

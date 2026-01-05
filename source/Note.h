@@ -30,4 +30,17 @@ struct Note {
     unsigned int length = 0;
     float decay = 0.0f;
     float freq = 0.0f;
+
+    bool operator==(const Note& note) const
+    {
+        return (key == note.key)
+        && (oct == note.oct)
+        && (length == note.length)
+        && (freq == note.freq);
+    }
+
+    bool operator!=(const Note& note) const
+    {
+        return !(*this == note);
+    }
 };
